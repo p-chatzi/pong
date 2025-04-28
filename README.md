@@ -1,2 +1,6 @@
 # pong
-Projet python S2. 
+Projet python S2
+
+Bibliothèques nécessaire : pygame
+
+ 
