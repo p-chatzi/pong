@@ -6,7 +6,8 @@ Bibliothèques nécessaire : pygame
 ================================== Version 0.02 ==================================
 
 Fonctionnalités à ajoutées: 
-
+- sytème de score
+- messages d'informations aux joueurs
 - sons à chaque collision avec les raquettes, les bords et lors des points
 - accélération de la balle toutes les 10 secondes
 - possibilité de mettre en pause avec barre espace
