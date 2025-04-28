@@ -3,7 +3,7 @@ Projet python S2
 
 Bibliothèques nécessaire : pygame
 
-==================================== Version 0.02 ====================================
+================================== Version 0.02 ==================================
 
 Fonctionnalités ajoutées: 
 
@@ -11,7 +11,7 @@ Fonctionnalités ajoutées:
 - accélération de la balle toutes les 10 secondes
 - possibilité de mettre en pause avec barre espace
  
-==================================== Version 0.01 ====================================
+================================== Version 0.01 ==================================
 
 Jeu Pong inspiré du jeu "PONG" d'Allan Alcorn et édité par ATARI de 1972.
 
