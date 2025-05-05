@@ -1,8 +1,10 @@
+# game.py
+
 import pygame
 import sys
 from constants import *
 from sounds import init_sounds
-from utils import reset_balle
+from utils import reset_balle, format_time
 
 class PongGame:
     def __init__(self):
@@ -21,10 +23,11 @@ class PongGame:
         self.ping_a, self.pong_b, self.pingpong_c = init_sounds()
         self.winner = None
         self.paused = False
+        self.start_time = pygame.time.get_ticks()
+        self.running = True  # Ajout de l'attribut running
 
     def run(self):
-        running = True
-        while running:
+        while self.running:  # Utilisation de self.running pour contrôler la boucle principale
             now = pygame.time.get_ticks()
 
             for event in pygame.event.get():
@@ -54,13 +57,16 @@ class PongGame:
 
     def move_raquettes(self):
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_z] and self.raquette_a.top > 0:
+        raquette_a_up, raquette_a_down = pygame.K_z, pygame.K_s
+        raquette_b_up, raquette_b_down = pygame.K_UP, pygame.K_DOWN
+
+        if keys[raquette_a_up] and self.raquette_a.top > 0:
             self.raquette_a.y -= RAQUETTE_VITESSE
-        if keys[pygame.K_s] and self.raquette_a.bottom < HEIGHT:
+        if keys[raquette_a_down] and self.raquette_a.bottom < HEIGHT:
             self.raquette_a.y += RAQUETTE_VITESSE
-        if keys[pygame.K_UP] and self.raquette_b.top > 0:
+        if keys[raquette_b_up] and self.raquette_b.top > 0:
             self.raquette_b.y -= RAQUETTE_VITESSE
-        if keys[pygame.K_DOWN] and self.raquette_b.bottom < HEIGHT:
+        if keys[raquette_b_down] and self.raquette_b.bottom < HEIGHT:
             self.raquette_b.y += RAQUETTE_VITESSE
 
     def move_balle(self):
@@ -87,7 +93,7 @@ class PongGame:
             self.reset_game()
             if self.score_b == WIN_SCORE:
                 self.winner = "Joueur B"
-                running = False
+                self.running = False  # Mise à jour de self.running
 
         if self.balle.right >= WIDTH:
             self.pingpong_c.play()
@@ -95,7 +101,7 @@ class PongGame:
             self.reset_game()
             if self.score_a == WIN_SCORE:
                 self.winner = "Joueur A"
-                running = False
+                self.running = False  # Mise à jour de self.running
 
     def reset_game(self):
         self.balle, self.balle_vitesse_x, self.balle_vitesse_y, self.last_speedup = reset_balle()
@@ -112,6 +118,11 @@ class PongGame:
         text = self.font.render(f"A: {self.score_a}    B: {self.score_b}", True, WHITE)
         self.screen.blit(text, (WIDTH // 2 - text.get_width() // 2, 40))
         self.screen.blit(win, (WIDTH // 2 - win.get_width() // 2, 5))
+
+        # Affichage du temps écoulé
+        elapsed_time = format_time(pygame.time.get_ticks() - self.start_time)
+        time_text = self.font.render(f"Temps écoulé: {elapsed_time}", True, WHITE)
+        self.screen.blit(time_text, (WIDTH // 2 - time_text.get_width() // 2, HEIGHT - 40))
 
         if self.paused:
             pause_text = self.font.render("PAUSE - Appuyez sur ESPACE", True, WHITE)

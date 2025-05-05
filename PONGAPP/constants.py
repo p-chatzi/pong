@@ -16,3 +16,4 @@ WIN_SCORE = 7
 
 SPEEDUP_INTERVAL = 10000  # 10 secondes
 SPEEDUP_FACTOR = 1.5  # facteur acceleration
+
