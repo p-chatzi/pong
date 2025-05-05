@@ -130,14 +130,14 @@ class PongGame:
 
         pygame.display.flip()
 
-    def show_winner(self):
-        self.screen.fill(BLACK)
-        if self.winner:
-            msg = f"{self.winner} gagne !"
-        else:
-            msg = "Fin du jeu"
-        text = self.font.render(msg, True, WHITE)
-        self.screen.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT // 2 - text.get_height() // 2))
-        pygame.display.flip()
-        pygame.time.wait(3000)
-        pygame.quit()
+def show_winner(self):
+    self.screen.fill(BLACK)
+    if self.winner:
+        msg = f"{self.winner} gagne !"
+    else:
+        msg = "Fin du jeu"
+    text = self.font.render(msg, True, WHITE)
+    self.screen.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT // 2 - text.get_height() // 2))
+    pygame.display.flip()
+    pygame.time.wait(3000)
+    return

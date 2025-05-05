@@ -1,6 +1,6 @@
 # constants.py
 
-WIDTH, HEIGHT = 800, 600
+WIDTH, HEIGHT = 1920, 1080
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 FPS = 60
