@@ -1,5 +1,4 @@
 # constants.py
-
 WIDTH, HEIGHT = 1920, 1080
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -17,3 +16,8 @@ WIN_SCORE = 7
 SPEEDUP_INTERVAL = 10000  # 10 secondes
 SPEEDUP_FACTOR = 1.5  # facteur acceleration
 
+# Paramètres des bonus
+BONUS_RADIUS = 25
+BONUS_SPAWN_INTERVAL = 15000  # 15 secondes
+BONUS_DURATION = 10000  # 10 secondes
+BONUS_BLINK_INTERVAL = 20  # Pour le clignotement
