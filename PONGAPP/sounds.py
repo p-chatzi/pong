@@ -1,7 +1,22 @@
+"""
+Initialise et charge les sons du jeu depuis le dossier 'assets' en utilisant pygame.mixer.
+"""
+
+
 import os
 import pygame
 
+
 def init_sounds():
+    """
+    Initialise les sons pour le jeu Pong.
+
+    Cette fonction configure le module mixer de Pygame, détermine les chemins absolus
+    des fichiers audio nécessaires et charge ces sons pour une utilisation ultérieure.
+
+    Retourne :
+        tuple : Contient trois objets pygame.mixer.Sound correspondant aux sons chargés.
+    """
     pygame.mixer.init()
     # Récupérer le dossier où se trouve ce script
     base_dir = os.path.dirname(os.path.abspath(__file__))

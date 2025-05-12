@@ -1,7 +1,14 @@
-# constants.py
+"""
+Constantes pour le jeu Pong : dimensions, couleurs, vitesses, scores, bonus et paramètres divers.
+"""
+
 WIDTH, HEIGHT = 1920, 1080
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+BLUE = (0, 0, 255)
+YELLOW = (255, 255, 0)
 FPS = 60
 
 RAQUETTE_WIDTH, RAQUETTE_HEIGHT = 10, 100

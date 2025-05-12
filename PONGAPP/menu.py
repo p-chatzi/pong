@@ -1,11 +1,42 @@
+"""
+Ce fichier gère les menus du jeu Pong.
+
+Fonctions:
+- charger_fleche(font): Charge/redimensionne l'image de la flèche.
+- main_menu(screen, font): Affiche le menu principal et gère la navigation.
+- parametres_menu(screen, font): Affiche le menu des paramètres et permet de revenir.
+
+Modules:
+- sys: Gestion de l'environnement Python.
+- os: Gestion des chemins de fichiers.
+- pygame: Bibliothèque pour créer des jeux.
+- constants: Contient WIDTH, WHITE, BLACK.
+
+Constantes:
+- WIDTH: Largeur de la fenêtre.
+- WHITE: Couleur blanche.
+- BLACK: Couleur noire.
+"""
+
+
 import sys
 import os
 import pygame
-from constants import WIDTH, HEIGHT, WHITE, BLACK
+from constants import WIDTH, WHITE, BLACK
+
 
 def charger_fleche(font):
+    """
+    Charge et redimensionne l'image de la flèche pour correspondre à la hauteur du texte.
+
+    Args:
+        font (pygame.font.Font): La police utilisée pour calculer la hauteur du texte.
+
+    Returns:
+        pygame.Surface: L'image redimensionnée de la flèche.
+    """
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    fleche_path = os.path.join(base_dir, 'assets', 'play_button.png')
+    fleche_path = os.path.join(base_dir, 'assets', 'fleche.png')  # Chemin mis à jour pour refléter le fichier de flèche
     image = pygame.image.load(fleche_path).convert_alpha()
     texte_temp = font.render("Test", True, WHITE)
     hauteur_texte = texte_temp.get_height()
@@ -13,7 +44,18 @@ def charger_fleche(font):
     image_redim = pygame.transform.smoothscale(image, (largeur, hauteur_texte))
     return image_redim
 
+
 def main_menu(screen, font):
+    """
+    Affiche le menu principal du jeu Pong et gère la navigation entre les options.
+
+    Args:
+        screen (pygame.Surface): La surface d'affichage où le menu sera dessiné.
+        font (pygame.font.Font): La police utilisée pour afficher le texte.
+
+    Returns:
+        str: L'option sélectionnée par l'utilisateur ("jouer", "paramètres" ou "quitter").
+    """
     options = ["Jouer", "Paramètres", "Quitter"]
     selection = 0
     fleche_img = charger_fleche(font)
@@ -49,8 +91,15 @@ def main_menu(screen, font):
                 if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
                     return options[selection].lower()
 
+
 def parametres_menu(screen, font):
-    selection = 0
+    """
+    Affiche le menu des paramètres du jeu Pong et permet de revenir au menu principal.
+
+    Args:
+        screen (pygame.Surface): La surface d'affichage où le menu sera dessiné.
+        font (pygame.font.Font): La police utilisée pour afficher le texte.
+    """
     fleche_img = charger_fleche(font)
 
     while True:

@@ -1,10 +1,49 @@
-# bonus.py
-import pygame
+"""
+Module bonus.py
+Ce module gère les bonus dans le jeu Pong. Les bonus apparaissent aléatoirement, 
+peuvent être collectés par les joueurs, et appliquent des effets temporaires.
+Classes:
+    - Bonus: Représente un bonus avec des propriétés, effets, et gestion de durée.
+Constantes importées:
+    - WIDTH, HEIGHT: Dimensions de l'écran.
+    - WHITE, BLACK: Couleurs.
+    - RAQUETTE_HEIGHT: Hauteur des raquettes.
+    - BONUS_RADIUS: Rayon du bonus.
+    - BONUS_DURATION: Durée d'un bonus actif.
+    - BONUS_BLINK_INTERVAL: Intervalle de clignotement.
+Fonctions utilitaires:
+    - format_time: Formate le temps restant pour affichage.
+"""
+
 import random
-from constants import WIDTH, HEIGHT, WHITE, BLACK, RAQUETTE_HEIGHT, BONUS_RADIUS, BONUS_DURATION, BONUS_BLINK_INTERVAL
-from utils import format_time
+import pygame
+from constants import WIDTH, HEIGHT, WHITE, BLACK, GREEN, YELLOW, RED, RAQUETTE_HEIGHT, BONUS_RADIUS, BONUS_DURATION, BONUS_BLINK_INTERVAL
+
 
 class Bonus:
+    """
+    Classe représentant un bonus dans le jeu Pong.
+
+    Attributs :
+        radius (int) : Rayon du bonus.
+        active (bool) : Indique si le bonus est actif.
+        type (dict) : Type de bonus (nom, couleur, effet).
+        rect (pygame.Rect) : Rectangle englobant le bonus.
+        spawn_time (int) : Temps d'apparition du bonus.
+        collected_time (int) : Temps de collecte du bonus.
+        duration (int) : Durée d'effet du bonus.
+        color (tuple) : Couleur du bonus.
+        types (list) : Liste des types de bonus disponibles.
+        blink_timer (int) : Timer pour l'effet de clignotement.
+        visible (bool) : Indique si le bonus est visible.
+
+    Méthodes :
+        spawn() : Fait apparaître un bonus aléatoire sur le terrain.
+        update() : Met à jour l'état du bonus (expiration).
+        draw(screen) : Dessine le bonus et affiche ses infos.
+        check_collision(rect, player) : Vérifie la collision avec un joueur.
+        is_active() : Vérifie si le bonus est encore actif.
+    """
     def __init__(self):
         self.radius = BONUS_RADIUS
         self.active = False
@@ -15,14 +54,19 @@ class Bonus:
         self.duration = BONUS_DURATION
         self.color = WHITE
         self.types = [
-            {"name": "SPEED+", "color": (0, 255, 0), "effect": "increase_speed"},
-            {"name": "SIZE+", "color": (255, 255, 0), "effect": "increase_size"},
-            {"name": "SLOW", "color": (255, 0, 0), "effect": "slow_opponent"}
+            {"name": "SPEED+", "color": GREEN, "effect": "increase_speed"},
+            {"name": "SIZE+", "color": YELLOW, "effect": "increase_size"},
+            {"name": "SLOW", "color": RED, "effect": "slow_opponent"}
         ]
         self.blink_timer = 0
         self.visible = True
 
+
     def spawn(self):
+        """
+        Fait apparaître un bonus sur l'écran. Définit son type, couleur, position aléatoire
+        et initialise les attributs liés à son état (actif, temps d'apparition, visibilité).
+        """
         if not self.active:
             self.type = random.choice(self.types)
             self.color = self.type["color"]
@@ -39,12 +83,26 @@ class Bonus:
             self.blink_timer = 0
             self.visible = True
 
+
     def update(self):
+        """
+        Met à jour l'état du bonus. 
+        Désactive le bonus si 10 secondes se sont écoulées depuis son apparition.
+        """
         # Faire disparaître le bonus après 10 secondes
         if self.active and pygame.time.get_ticks() - self.spawn_time > self.duration:
             self.active = False
 
+
     def draw(self, screen):
+        """
+        Dessine le bonus sur l'écran s'il est actif et gère son clignotement.
+        Args:
+            screen (pygame.Surface): Surface sur laquelle dessiner le bonus.
+
+        Affiche également le type et le temps restant du bonus, ainsi que le temps
+        restant des bonus actifs.
+        """
         if self.active:
             # Clignotement
             self.blink_timer += 1
@@ -60,7 +118,7 @@ class Bonus:
                 font = pygame.font.SysFont("Arial", 20)
                 text = font.render(f"{self.type['name']} {remaining_time}s", True, BLACK)
                 screen.blit(text, (self.rect.centerx - text.get_width()//2, 
-                                 self.rect.centery - text.get_height()//2))
+                self.rect.centery - text.get_height()//2))
 
         # Afficher le temps restant pour les bonus actifs
         if self.collected_time > 0:
@@ -72,12 +130,32 @@ class Bonus:
                 y_pos = 10 if self.type['effect'].endswith('a') else 30
                 screen.blit(text_surface, (WIDTH//2 - text_surface.get_width()//2, y_pos))
 
+
     def check_collision(self, rect, player):
+        """
+        Vérifie la collision entre un rectangle et un joueur. Si actif et collision détectée, 
+        désactive l'objet, enregistre le temps de collecte et retourne l'effet appliqué au joueur.
+        
+        Args:
+            rect (pygame.Rect): Rectangle à tester pour la collision.
+            player (int): Identifiant ou attribut du joueur.
+
+        Returns:
+            Optional[int]: Effet appliqué au joueur ou None si pas de collision.
+        """
         if self.active and self.rect.colliderect(rect):
             self.active = False
             self.collected_time = pygame.time.get_ticks()
             return self.type['effect'] + player
         return None
 
+
     def is_active(self):
+        """
+        Détermine si le bonus est actif.
+
+        Returns:
+            True si le temps écoulé depuis la collecte est inférieur à la durée,
+            sinon False.
+        """
         return pygame.time.get_ticks() - self.collected_time < self.duration if self.collected_time > 0 else False
