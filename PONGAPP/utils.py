@@ -2,28 +2,31 @@
 Module utilitaire pour le jeu Pong.
 
 Fonctions:
-- reset_balle: Réinitialise la balle au centre avec une vitesse aléatoire.
+- reset_ball: Réinitialise la ball au centre avec une speed aléatoire.
 - format_time: Formate une durée en millisecondes en "minutes:secondes".
 """
 
 import random
 import pygame
-from constants import WIDTH, HEIGHT, BALLE_SIZE, BALLE_VITESSE_INIT_X, BALLE_VITESSE_INIT_Y
+from constants import WIDTH, HEIGHT, BALL_SIZE, BALL_SPEED_INIT_X, BALL_SPEED_INIT_Y
 
-def reset_balle():
+def reset_ball():
     """
-    Réinitialise la balle au centre avec une vitesse aléatoire et retourne ses paramètres initiaux.
+    Réinitialise la ball au centre avec une speed aléatoire et retourne ses paramètres initiaux.
     """
-    # Position initiale de la balle au centre de l'écran
-    balle = pygame.Rect(WIDTH // 2 - BALLE_SIZE // 2, HEIGHT // 2 - BALLE_SIZE // 2, BALLE_SIZE, BALLE_SIZE)
+    # Position initiale de la ball au centre de l'écran
+    ball = pygame.Rect(WIDTH // 2 - BALL_SIZE // 2,
+                    HEIGHT // 2 - BALL_SIZE // 2,
+                    BALL_SIZE,
+                    BALL_SIZE)
 
     # Vitesse initiale aléatoire
-    balle_vitesse_x = random.choice([-1, 1]) * BALLE_VITESSE_INIT_X
-    balle_vitesse_y = random.choice([-1, 1]) * BALLE_VITESSE_INIT_Y
+    ball_speed_x = random.choice([-1, 1]) * BALL_SPEED_INIT_X
+    ball_speed_y = random.choice([-1, 1]) * BALL_SPEED_INIT_Y
 
     last_speedup = pygame.time.get_ticks()
 
-    return balle, balle_vitesse_x, balle_vitesse_y, last_speedup
+    return ball, ball_speed_x, ball_speed_y, last_speedup
 
 def format_time(milliseconds):
     """

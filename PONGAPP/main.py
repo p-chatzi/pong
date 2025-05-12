@@ -1,10 +1,10 @@
 """
 Point d'entrée principal pour l'application Pong.
-
+`
 Fonctionnalités :
 - Initialise Pygame et configure l'environnement.
 - Affiche un menu principal avec jouer, paramètres ou quitter.
-- Gère les interactions utilisateur et événements Pygame.
+- Gère les interactioxns utilisateur et événements Pygame.
 - Attend une entrée clavier avant de revenir au menu principal.
 
 Fonctions :
@@ -14,7 +14,7 @@ Fonctions :
 Modules :
 - sys : Quitte proprement l'application.
 - pygame : Gestion graphique, événements et interactions utilisateur.
-- constants : Largeur et hauteur de l'écran.
+- constants : width et height de l'écran.
 - menu : Menu principal et menu des paramètres.
 - game : Classe PongGame pour la logique du jeu.
 
@@ -25,7 +25,7 @@ Exécution :
 
 import sys
 import pygame
-from constants import WIDTH, HEIGHT
+from constants import WIDTH, HEIGHT, WHITE, END_TEXT_OFFSET_Y, FONT_SIZE
 from menu import main_menu, parametres_menu
 from game import PongGame
 
@@ -35,11 +35,12 @@ def wait_for_key(screen, font):
     Affiche un message à l'écran et attend qu'une touche soit pressée pour continuer.
 
     Args:
-        screen (pygame.Surface): La surface de l'écran où le texte sera affiché.
-        font (pygame.font.Font): La police utilisée pour rendre le texte.
+        screen (pygame.Surface): La surface de l'écran où le text sera affiché.
+        font (pygame.font.Font): La police utilisée pour rendre le text.
     """
-    text = font.render("Appuyez sur une touche pour revenir au menu", True, (255,255,255))
-    screen.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT // 2 - text.get_height() // 2 + 60))
+    text = font.render("Appuyez sur une touche pour revenir au menu", True, WHITE)
+    screen.blit(text, (WIDTH // 2 - text.get_width() // 2,
+                       HEIGHT // 2 - text.get_height() // 2 + END_TEXT_OFFSET_Y))
     pygame.display.flip()
     waiting = True
     while waiting:
@@ -69,7 +70,7 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Pong")
-    font = pygame.font.SysFont("Arial", 30)
+    font = pygame.font.SysFont("Arial", FONT_SIZE)
     while True:
         choix = main_menu(screen, font)
         if choix == "jouer":

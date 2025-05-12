@@ -7,7 +7,7 @@ Classes:
 Constantes importées:
     - WIDTH, HEIGHT: Dimensions de l'écran.
     - WHITE, BLACK: Couleurs.
-    - RAQUETTE_HEIGHT: Hauteur des raquettes.
+    - PADDLE_HEIGHT: height des paddles.
     - BONUS_RADIUS: Rayon du bonus.
     - BONUS_DURATION: Durée d'un bonus actif.
     - BONUS_BLINK_INTERVAL: Intervalle de clignotement.
@@ -17,7 +17,13 @@ Fonctions utilitaires:
 
 import random
 import pygame
-from constants import WIDTH, HEIGHT, WHITE, BLACK, GREEN, YELLOW, RED, RAQUETTE_HEIGHT, BONUS_RADIUS, BONUS_DURATION, BONUS_BLINK_INTERVAL
+from constants import (
+    WIDTH, HEIGHT, WHITE, BLACK, GREEN, YELLOW, RED,
+    PADDLE_HEIGHT, BONUS_RADIUS, BONUS_DURATION, BONUS_BLINK_INTERVAL,
+    BONUS_LEFT_ZONE, BONUS_RIGHT_ZONE, BONUS_MARGIN_X,
+    BONUS_INFO_Y_PLAYER1, BONUS_INFO_Y_PLAYER2,
+    BONUS_FONT_SIZE, BONUS_INFO_FONT_SIZE
+)
 
 
 class Bonus:
@@ -54,8 +60,8 @@ class Bonus:
         self.duration = BONUS_DURATION
         self.color = WHITE
         self.types = [
-            {"name": "SPEED+", "color": GREEN, "effect": "increase_speed"},
-            {"name": "SIZE+", "color": YELLOW, "effect": "increase_size"},
+            {"name": "FAST", "color": GREEN, "effect": "increase_speed"},
+            {"name": "BIG", "color": YELLOW, "effect": "increase_size"},
             {"name": "SLOW", "color": RED, "effect": "slow_opponent"}
         ]
         self.blink_timer = 0
@@ -71,13 +77,13 @@ class Bonus:
             self.type = random.choice(self.types)
             self.color = self.type["color"]
             spawn_side = random.choice(["left", "right"])
-            
+
             if spawn_side == "left":
-                self.rect.x = random.randint(50, WIDTH//3)
+                self.rect.x = random.randint(BONUS_MARGIN_X, BONUS_LEFT_ZONE)
             else:
-                self.rect.x = random.randint(WIDTH*2//3, WIDTH - 50)
-            
-            self.rect.y = random.randint(RAQUETTE_HEIGHT, HEIGHT - RAQUETTE_HEIGHT)
+                self.rect.x = random.randint(BONUS_RIGHT_ZONE, WIDTH - BONUS_MARGIN_X)
+
+            self.rect.y = random.randint(PADDLE_HEIGHT, HEIGHT - PADDLE_HEIGHT)
             self.active = True
             self.spawn_time = pygame.time.get_ticks()
             self.blink_timer = 0
@@ -115,9 +121,9 @@ class Bonus:
                 
                 # Afficher le type et temps restant
                 remaining_time = max(0, (self.duration - (pygame.time.get_ticks() - self.spawn_time))) // 1000
-                font = pygame.font.SysFont("Arial", 20)
+                font = pygame.font.SysFont("Arial", BONUS_FONT_SIZE)
                 text = font.render(f"{self.type['name']} {remaining_time}s", True, BLACK)
-                screen.blit(text, (self.rect.centerx - text.get_width()//2, 
+                screen.blit(text, (self.rect.centerx - text.get_width()//2,
                 self.rect.centery - text.get_height()//2))
 
         # Afficher le temps restant pour les bonus actifs
@@ -125,9 +131,13 @@ class Bonus:
             remaining_time = max(0, self.duration - (pygame.time.get_ticks() - self.collected_time))
             if remaining_time > 0:
                 time_text = f"BONUS: {self.type['name']} ({remaining_time//1000}s)"
-                font = pygame.font.SysFont("Arial", 24)
+                font = pygame.font.SysFont("Arial", BONUS_INFO_FONT_SIZE)
                 text_surface = font.render(time_text, True, self.color)
-                y_pos = 10 if self.type['effect'].endswith('a') else 30
+                y_pos = (
+                    BONUS_INFO_Y_PLAYER1
+                    if self.type['effect'].endswith('a')
+                    else BONUS_INFO_Y_PLAYER2
+                    )
                 screen.blit(text_surface, (WIDTH//2 - text_surface.get_width()//2, y_pos))
 
 
@@ -158,4 +168,7 @@ class Bonus:
             True si le temps écoulé depuis la collecte est inférieur à la durée,
             sinon False.
         """
-        return pygame.time.get_ticks() - self.collected_time < self.duration if self.collected_time > 0 else False
+        return (
+            pygame.time.get_ticks() - self.collected_time < self.duration
+            if self.collected_time > 0
+            else False)

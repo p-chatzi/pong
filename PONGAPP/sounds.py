@@ -21,12 +21,12 @@ def init_sounds():
     # Récupérer le dossier où se trouve ce script
     base_dir = os.path.dirname(os.path.abspath(__file__))
     # Construire le chemin absolu vers chaque fichier son
-    ping_a_path = os.path.join(base_dir, 'assets', '4359__noisecollector__pongblipf4.wav')
-    pong_b_path = os.path.join(base_dir, 'assets', '4388__noisecollector__pongblipe5.wav')
-    pingpong_c_path = os.path.join(base_dir, 'assets', '475557__rannem__bip.wav')
+    ping_a_path = os.path.join(base_dir, 'assets', 'ping_a.wav')
+    pong_b_path = os.path.join(base_dir, 'assets', 'pong_b.wav')
+    ping_pong_c_path = os.path.join(base_dir, 'assets', 'ping_pong_c.wav')
 
-    # Charger les sons avec les chemins absolus
+    # load les sons avec les chemins absolus
     ping_a = pygame.mixer.Sound(ping_a_path)
     pong_b = pygame.mixer.Sound(pong_b_path)
-    pingpong_c = pygame.mixer.Sound(pingpong_c_path)
-    return ping_a, pong_b, pingpong_c
+    ping_pong_c = pygame.mixer.Sound(ping_pong_c_path)
+    return ping_a, pong_b, ping_pong_c
