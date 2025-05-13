@@ -3,13 +3,13 @@ Projet python S2
 
 Bibliothèques nécessaire : pygame
 
-================================== Version ?? ==================================
+================================== Version 0.07 ==================================
 
 - Changement noms de variable (franglais -> full anglais)
 - Nombres magique remplace par des constantes
 - Simplification de certaines logiques
 
-================================== Version ?? ==================================
+================================== Version 0.06 ==================================
 
 Fonctionnalités à ajoutées: 
 - Système de bonus
