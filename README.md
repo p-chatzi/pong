@@ -14,14 +14,14 @@ Bibliothèques nécessaire : pygame
 Fonctionnalités à ajoutées: 
 - Système de bonus
 
-Bug corrigé
+Bug fix :
 - Score infini (le jeu ne se stop pas à 7)
 
-================================== Version ?? ==================================
+================================== Version 0.05 ==================================
 
-(pause...)
+Amélioration de la pause
 
-================================== Version ?? ==================================
+================================== Version 0.04 ==================================
 
 Fonctionnalité ajoutée: 
 - Ajout du menu
@@ -30,9 +30,13 @@ Fonctionnalité ajoutée:
 - Gestion du menu
 - Image d'une fleche (la selection actuelle)
 
-================================== Version ?? ==================================
-
-(son, score, message fin, accelerations...)
+================================== Version 0.03 ==================================
+Fonctionnalités à ajoutées: 
+- Amélioration système de score
+- messages du vainqueur
+- Modifications sons à chaque collision avec les paddles, les bords et lors des points
+- accélération de la balle toutes les 10 secondes
+- possibilité de mettre en pause avec barre espace
 
 ================================== Version 0.02 ==================================
 
@@ -40,8 +44,7 @@ Fonctionnalités à ajoutées:
 - système de score
 - messages d'informations aux joueurs
 - sons à chaque collision avec les paddles, les bords et lors des points
-- accélération de la balle toutes les 10 secondes
-- possibilité de mettre en pause avec barre espace
+
  
 ================================== Version 0.01 ==================================
 
