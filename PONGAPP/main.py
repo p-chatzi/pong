@@ -28,6 +28,7 @@ import pygame
 from constants import WIDTH, HEIGHT, WHITE, END_TEXT_OFFSET_Y, FONT_SIZE
 from menu import main_menu, parametres_menu
 from game import PongGame
+from settings import get_current_paddle_height
 
 
 def wait_for_key(screen, font):
@@ -67,20 +68,26 @@ def main():
     liées à Pygame ou au système doivent être prises en compte dans les fonctions appelées.
 
     """
+    # Initialisation de Pygame
     pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Pong")
     font = pygame.font.SysFont("Arial", FONT_SIZE)
+
+    # Boucle principale
     while True:
         choix = main_menu(screen, font)
         if choix == "jouer":
-            jeu = PongGame()
+            paddle_height = get_current_paddle_height()
+            jeu = PongGame(paddle_height)
             jeu.screen = screen
             jeu.font = font
             jeu.run()
             wait_for_key(screen, font)
+
         elif choix == "paramètres":
             parametres_menu(screen, font)
+
         elif choix == "quitter":
             pygame.quit()
             sys.exit()

@@ -14,7 +14,7 @@ def init_sounds():
     Cette fonction configure le module mixer de Pygame, détermine les chemins absolus
     des fichiers audio nécessaires et charge ces sons pour une utilisation ultérieure.
 
-    Retourne :
+    Returns:
         tuple : Contient trois objets pygame.mixer.Sound correspondant aux sons chargés.
     """
     pygame.mixer.init()

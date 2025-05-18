@@ -2,36 +2,28 @@
 Ce fichier gère les menus du jeu Pong.
 
 Fonctions:
-- get_pos_x_titre(titre): 
-    Calcule la position X pour centrer le titre.
-- get_centered_y(text_surface, arrow_img): 
-    Calcule la position Y pour centrer une image par rapport à un text.
-- load_arrow(font): Charge/redimensionne 
-    l'image de la flèche.
-- main_menu(screen, font): 
-    Affiche le menu principal et gère la navigation.
-- parametres_menu(screen, font): 
-    Affiche le menu des paramètres et permet de revenir.
+- get_pos_x_titre(titre): Calcule la position X pour centrer le titre.
+- get_centered_y(text_surface, arrow_img): Calcule la position Y pour centrer une image par rapport à un text.
+- load_arrow(font): Charge/redimensionne l'image de la flèche.
+- main_menu(screen, font): Affiche le menu principal et gère la navigation.
+- parametres_menu(screen, font): Affiche le menu des paramètres et permet de modifier la taille des paddles.
 
 Modules:
 - sys: Gestion de l'environnement Python.
 - os: Gestion des chemins de fichiers.
 - pygame: Bibliothèque pour créer des jeux.
-- constants: Contient WIDTH, WHITE, BLACK.
-
-Constantes:
-- WIDTH: width de la fenêtre.
-- WHITE: Couleur blanche.
-- BLACK: Couleur noire.
+- constants: Contient toutes les constantes du jeu.
+- settings: Gère l'état mutable des paramètres.
 """
-
 
 import sys
 import os
 import pygame
-from constants import (WIDTH, WHITE, BLACK, POS_Y_TITRE, MENU_OPTIONS_SPACING,
-                    MENU_OPTIONS_START_Y, ALLIGN_TEXT_PADDING, Y_TEXT)
-
+from constants import (
+    WIDTH, WHITE, BLACK, POS_Y_TITRE, MENU_OPTIONS_SPACING,
+    MENU_OPTIONS_START_Y, ALLIGN_TEXT_PADDING, PADDLE_SIZES
+)
+import settings
 
 def load_arrow(font):
     """
@@ -52,7 +44,6 @@ def load_arrow(font):
     image_resized = pygame.transform.smoothscale(image, (width, height_text))
     return image_resized
 
-
 def get_pos_x_titre(titre):
     """
     Calcule la position X pour centrer le text sur l'écran.
@@ -64,7 +55,6 @@ def get_pos_x_titre(titre):
         int: La position X pour centrer le titre.
     """
     return WIDTH // 2 - titre.get_width() // 2
-
 
 def get_centered_y(text_surface, arrow_img):
     """
@@ -79,7 +69,6 @@ def get_centered_y(text_surface, arrow_img):
         int: Décalage Y pour centrer l'image sur le text.
     """
     return (text_surface.get_height() - arrow_img.get_height()) // 2
-
 
 def main_menu(screen, font):
     """
@@ -101,7 +90,6 @@ def main_menu(screen, font):
         titre = font.render("PONG", True, WHITE)
         screen.blit(titre, (get_pos_x_titre(titre), POS_Y_TITRE))
 
-
         for i, option in enumerate(options):
             text_surface = font.render(option, True, WHITE)
             x_text = get_pos_x_titre(text_surface)
@@ -110,7 +98,6 @@ def main_menu(screen, font):
             if i == selection:
                 x_arrow = x_text - arrow_img.get_width() - ALLIGN_TEXT_PADDING
                 y_arrow = y_text + get_centered_y(text_surface, arrow_img)
-                
                 screen.blit(arrow_img, (x_arrow, y_arrow))
 
             screen.blit(text_surface, (x_text, y_text))
@@ -124,20 +111,18 @@ def main_menu(screen, font):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
                     selection = (selection - 1) % len(options)
-                if event.key == pygame.K_DOWN:
+                elif event.key == pygame.K_DOWN:
                     selection = (selection + 1) % len(options)
-                if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
+                elif event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
                     return options[selection].lower()
-
 
 def parametres_menu(screen, font):
     """
-    Affiche le menu des paramètres du jeu Pong et permet de revenir au menu principal.
-
-    Args:
-        screen (pygame.Surface): La surface d'affichage où le menu sera dessiné.
-        font (pygame.font.Font): La police utilisée pour afficher le text.
+    Affiche le menu des paramètres et permet de modifier la taille des paddles.
+    Navigation identique au menu principal.
     """
+    options = ["Taille des paddles", "Retour"]
+    selection = 0
     arrow_img = load_arrow(font)
 
     while True:
@@ -145,14 +130,20 @@ def parametres_menu(screen, font):
         titre = font.render("PARAMÈTRES", True, WHITE)
         screen.blit(titre, (get_pos_x_titre(titre), POS_Y_TITRE))
 
-        option = "Retour"
-        text_surface = font.render(option, True, WHITE)
-        x_text = get_pos_x_titre(text_surface)
-
-        x_arrow = x_text - arrow_img.get_width() - ALLIGN_TEXT_PADDING
-        y_arrow = Y_TEXT + get_centered_y(text_surface, arrow_img)
-        screen.blit(arrow_img, (x_arrow, y_arrow))
-        screen.blit(text_surface, (x_text, Y_TEXT))
+        for i, option in enumerate(options):
+            if i == 0:
+                size_name = settings.get_current_paddle_name()
+                text = f"Taille des paddles : [{size_name}]"
+            else:
+                text = option
+            text_surface = font.render(text, True, WHITE)
+            x_text = get_pos_x_titre(text_surface)
+            y_text = MENU_OPTIONS_START_Y + i * MENU_OPTIONS_SPACING
+            screen.blit(text_surface, (x_text, y_text))
+            if i == selection:
+                x_arrow = x_text - arrow_img.get_width() - ALLIGN_TEXT_PADDING
+                y_arrow = y_text + get_centered_y(text_surface, arrow_img)
+                screen.blit(arrow_img, (x_arrow, y_arrow))
 
         pygame.display.flip()
 
@@ -161,5 +152,14 @@ def parametres_menu(screen, font):
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
-                    return
+                if event.key == pygame.K_UP:
+                    selection = (selection - 1) % len(options)
+                elif event.key == pygame.K_DOWN:
+                    selection = (selection + 1) % len(options)
+                elif event.key == pygame.K_LEFT and selection == 0:
+                    settings.CURRENT_PADDLE_SIZE_INDEX = (settings.CURRENT_PADDLE_SIZE_INDEX - 1) % len(PADDLE_SIZES)
+                elif event.key == pygame.K_RIGHT and selection == 0:
+                    settings.CURRENT_PADDLE_SIZE_INDEX = (settings.CURRENT_PADDLE_SIZE_INDEX + 1) % len(PADDLE_SIZES)
+                elif event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
+                    if selection == 1:  # Retour
+                        return
