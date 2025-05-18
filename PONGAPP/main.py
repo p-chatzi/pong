@@ -22,8 +22,10 @@ Exécution :
 - À exécuter directement pour appeler la fonction main().
 """
 
-
 import sys
+import os
+# Pour centrer la fenêtre de Pygame sur l'écran
+os.environ['SDL_VIDEO_CENTERED'] = '1'
 import pygame
 from constants import WIDTH, HEIGHT, WHITE, END_TEXT_OFFSET_Y, FONT_SIZE
 from menu import main_menu, parametres_menu
@@ -70,7 +72,15 @@ def main():
     """
     # Initialisation de Pygame
     pygame.init()
-    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    # Configuration de la taille d'écran
+    width, height = get_current_screen_size()
+    if width == 0 and height == 0:
+        screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+        info = pygame.display.Info()
+        width, height = info.current_w, info.current_h
+    else:
+        screen = pygame.display.set_mode((width, height))
+
     pygame.display.set_caption("Pong")
     font = pygame.font.SysFont("Arial", FONT_SIZE)
 
@@ -82,8 +92,8 @@ def main():
             paddle_height = get_current_paddle_height()
 
             # Récupération de la taille de l'écran
-            label = get_current_screen_size_label()
             width, height = get_current_screen_size()
+            label = get_current_screen_size_label()
             if label == "Fullscreen":
                 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
                 info = pygame.display.Info()

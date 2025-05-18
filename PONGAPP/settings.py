@@ -27,7 +27,7 @@ SCREEN_SIZES = [
     ("800x400", 800, 400),
     ("Fullscreen", 0, 0)
 ]
-CURRENT_SCREEN_SIZE_INDEX = 0
+CURRENT_SCREEN_SIZE_INDEX = 1 # 800x400 par défaut
 
 def get_current_screen_size():
     """

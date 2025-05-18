@@ -52,23 +52,24 @@ class PongGame:
     - show_winner() : Affiche le gagnant à la fin de la partie.
     """
     def __init__(self, paddle_height, label, width, height):
+        self.width = width
+        self.height = height
         pygame.init()
         self.screen = pygame.display.set_mode((width, height))
         pygame.display.set_caption("Pong")
         self.clock = pygame.time.Clock()
         self.font = pygame.font.SysFont("Arial", FONT_SIZE)
 
-
         self.paddle_a = pygame.Rect(PADDEL_MARGIN_X,
-                                    HEIGHT//2 - paddle_height//2,
+                                    height//2 - paddle_height//2,
                                     PADDLE_WIDTH,
                                     paddle_height)
-        self.paddle_b = pygame.Rect(WIDTH - PADDEL_MARGIN_X - PADDLE_WIDTH,
-                                    HEIGHT//2 - paddle_height//2,
+        self.paddle_b = pygame.Rect(width - PADDEL_MARGIN_X - PADDLE_WIDTH,
+                                    height//2 - paddle_height//2,
                                     PADDLE_WIDTH,
                                     paddle_height)
 
-        self.ball, self.ball_speed_x, self.ball_speed_y, self.last_speedup = reset_ball()
+        self.ball, self.ball_speed_x, self.ball_speed_y, self.last_speedup = reset_ball(width, height)
 
         self.score_a, self.score_b = 0, 0
         self.ping_a, self.pong_b, self.ping_pong_c = init_sounds()
@@ -204,11 +205,11 @@ class PongGame:
         keys = pygame.key.get_pressed()
         if keys[pygame.K_z] and self.paddle_a.top > 0:
             self.paddle_a.y -= self.paddle_a_speed
-        if keys[pygame.K_s] and self.paddle_a.bottom < HEIGHT:
+        if keys[pygame.K_s] and self.paddle_a.bottom < self.height - 1:
             self.paddle_a.y += self.paddle_a_speed
         if keys[pygame.K_UP] and self.paddle_b.top > 0:
             self.paddle_b.y -= self.paddle_b_speed
-        if keys[pygame.K_DOWN] and self.paddle_b.bottom < HEIGHT:
+        if keys[pygame.K_DOWN] and self.paddle_b.bottom < self.height - 1:
             self.paddle_b.y += self.paddle_b_speed
 
 
@@ -220,7 +221,7 @@ class PongGame:
         self.ball.x += self.ball_speed_x
         self.ball.y += self.ball_speed_y
 
-        if self.ball.top <= 0 or self.ball.bottom >= HEIGHT:
+        if self.ball.top <= 0 or self.ball.bottom >= self.height - 1:
             self.ball_speed_y *= -1
             self.pong_b.play()
 
@@ -242,7 +243,7 @@ class PongGame:
                 self.winner = "Joueur B"
                 self.running = False
 
-        if self.ball.right >= WIDTH:
+        if self.ball.right >= self.width:
             self.ping_pong_c.play()
             self.score_a += 1
             self.reset_game()
@@ -256,7 +257,7 @@ class PongGame:
         Réinitialise le jeu en rétablissant la position de la ball, 
         sa speed, les effets actifs et la taille des paddles.
         """
-        self.ball, self.ball_speed_x, self.ball_speed_y, self.last_speedup = reset_ball()
+        self.ball, self.ball_speed_x, self.ball_speed_y, self.last_speedup = reset_ball(self.width, self.height)
         pygame.time.delay(700)
         # Réinitialiser les effets de bonus
         for effect in self.active_effects:
@@ -278,20 +279,21 @@ class PongGame:
         pygame.draw.rect(self.screen, WHITE, self.paddle_a)
         pygame.draw.rect(self.screen, WHITE, self.paddle_b)
         pygame.draw.ellipse(self.screen, WHITE, self.ball)
-        pygame.draw.aaline(self.screen, WHITE, (WIDTH//2, 0), (WIDTH//2, HEIGHT))
+        pygame.draw.aaline(self.screen, WHITE, (self.width//2, 0), (self.width//2, self.height))
 
         self.bonus.draw(self.screen)
 
         score_text = self.font.render(f"{self.score_a} - {self.score_b}", True, WHITE)
-        self.screen.blit(score_text, (WIDTH//2 - score_text.get_width()//2, 20))
+        self.screen.blit(score_text, (self.width//2 - score_text.get_width()//2, 20))
 
         elapsed_time = format_time(pygame.time.get_ticks() - self.start_time)
         time_text = self.font.render(f"Time: {elapsed_time}", True, WHITE)
-        self.screen.blit(time_text, (WIDTH//2 - time_text.get_width()//2, HEIGHT - TIME_Y_OFFSET))
+        time_y = self.height - int(self.height * TIME_Y_OFFSET)
+        self.screen.blit(time_text, (self.width//2 - time_text.get_width()//2, time_y))
 
         if self.paused:
             pause_text = self.font.render("PAUSE (SPACE)", True, WHITE)
-            self.screen.blit(pause_text, (WIDTH//2 - pause_text.get_width()//2, HEIGHT//2))
+            self.screen.blit(pause_text, (self.width//2 - pause_text.get_width()//2, self.height//2))
 
         pygame.display.flip()
 
@@ -307,6 +309,6 @@ class PongGame:
         else:
             msg = "FIN DE LA PARTIE !"
         text = self.font.render(msg, True, WHITE)
-        self.screen.blit(text, (WIDTH//2 - text.get_width()//2, HEIGHT//2 - text.get_height()//2))
+        self.screen.blit(text, (self.width//2 - text.get_width()//2, self.height//2 - text.get_height()//2))
         pygame.display.flip()
         pygame.time.wait(3000)

@@ -44,7 +44,7 @@ def load_arrow(font):
     image_resized = pygame.transform.smoothscale(image, (width, height_text))
     return image_resized
 
-def get_pos_x_titre(titre):
+def get_pos_x_titre(titre, window_width):
     """
     Calcule la position X pour centrer le text sur l'écran.
 
@@ -54,7 +54,7 @@ def get_pos_x_titre(titre):
     Returns:
         int: La position X pour centrer le titre.
     """
-    return WIDTH // 2 - titre.get_width() // 2
+    return window_width // 2 - titre.get_width() // 2
 
 def get_centered_y(text_surface, arrow_img):
     """
@@ -88,11 +88,11 @@ def main_menu(screen, font):
     while True:
         screen.fill(BLACK)
         titre = font.render("PONG", True, WHITE)
-        screen.blit(titre, (get_pos_x_titre(titre), POS_Y_TITRE))
+        screen.blit(titre, (get_pos_x_titre(titre, screen.get_width()), POS_Y_TITRE))
 
         for i, option in enumerate(options):
             text_surface = font.render(option, True, WHITE)
-            x_text = get_pos_x_titre(text_surface)
+            x_text = get_pos_x_titre(text_surface, screen.get_width())
             y_text = MENU_OPTIONS_START_Y + i * MENU_OPTIONS_SPACING
 
             if i == selection:
@@ -129,7 +129,7 @@ def parametres_menu(screen, font):
         # Affichage du menu
         screen.fill(BLACK)
         titre = font.render("PARAMÈTRES", True, WHITE)
-        screen.blit(titre, (get_pos_x_titre(titre), POS_Y_TITRE))
+        screen.blit(titre, (get_pos_x_titre(titre, screen.get_width()), POS_Y_TITRE))
 
         for i, option in enumerate(options):
             # Affichage de la taille des paddles
@@ -147,7 +147,7 @@ def parametres_menu(screen, font):
 
             # Rendu du text
             text_surface = font.render(text, True, WHITE)
-            x_text = get_pos_x_titre(text_surface)
+            x_text = get_pos_x_titre(text_surface, screen.get_width())
             y_text = MENU_OPTIONS_START_Y + i * MENU_OPTIONS_SPACING
             screen.blit(text_surface, (x_text, y_text))
             if i == selection:
