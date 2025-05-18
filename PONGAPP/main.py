@@ -28,7 +28,7 @@ import pygame
 from constants import WIDTH, HEIGHT, WHITE, END_TEXT_OFFSET_Y, FONT_SIZE
 from menu import main_menu, parametres_menu
 from game import PongGame
-from settings import get_current_paddle_height
+from settings import get_current_paddle_height, get_current_screen_size_label, get_current_screen_size
 
 
 def wait_for_key(screen, font):
@@ -78,16 +78,31 @@ def main():
     while True:
         choix = main_menu(screen, font)
         if choix == "jouer":
+            # Récupération de la taille du paddle
             paddle_height = get_current_paddle_height()
-            jeu = PongGame(paddle_height)
+
+            # Récupération de la taille de l'écran
+            label = get_current_screen_size_label()
+            width, height = get_current_screen_size()
+            if label == "Fullscreen":
+                screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+                info = pygame.display.Info()
+                width, height = info.current_w, info.current_h
+            else:
+                screen = pygame.display.set_mode((width, height))
+
+            # Création de l'objet PongGame et lancement du jeu
+            jeu = PongGame(paddle_height, label, width, height)
             jeu.screen = screen
             jeu.font = font
             jeu.run()
             wait_for_key(screen, font)
 
+        # On entre dans le menu des paramètres
         elif choix == "paramètres":
             parametres_menu(screen, font)
 
+        # On quitte le jeu
         elif choix == "quitter":
             pygame.quit()
             sys.exit()

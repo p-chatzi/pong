@@ -8,8 +8,8 @@ import pygame
 from constants import (
     WIDTH, HEIGHT, WHITE, BLACK, FPS, PADDLE_WIDTH, PADDLE_SPEED,
     FONT_SIZE, TIME_Y_OFFSET, WIN_SCORE, SPEEDUP_INTERVAL,
-    SPEEDUP_FACTOR, BONUS_SPAWN_INTERVAL, SIZE_BOOST, SPEED_BOOST, SPEED_SLOW,
-    CURRENT_PADDLE_SIZE_INDEX, PADDEL_MARGIN_X, PADDLE_SIZES, PADDLE_HEIGHT
+    SPEEDUP_FACTOR, BONUS_SPAWN_INTERVAL, SPEED_BOOST, SPEED_SLOW,
+    PADDEL_MARGIN_X, PADDLE_HEIGHT
 )
 import settings
 from sounds import init_sounds
@@ -51,9 +51,9 @@ class PongGame:
     - draw() : Dessine les éléments du jeu à l'écran.
     - show_winner() : Affiche le gagnant à la fin de la partie.
     """
-    def __init__(self, paddle_height):
+    def __init__(self, paddle_height, label, width, height):
         pygame.init()
-        self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
+        self.screen = pygame.display.set_mode((width, height))
         pygame.display.set_caption("Pong")
         self.clock = pygame.time.Clock()
         self.font = pygame.font.SysFont("Arial", FONT_SIZE)

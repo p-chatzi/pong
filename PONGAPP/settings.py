@@ -21,3 +21,30 @@ def get_current_paddle_name():
     Retourne le nom affiché de la taille de paddle actuellement sélectionnée.
     """
     return PADDLE_SIZES[CURRENT_PADDLE_SIZE_INDEX][0]
+
+SCREEN_SIZES = [
+    ("600x300", 600, 300),
+    ("800x400", 800, 400),
+    ("Fullscreen", 0, 0)
+]
+CURRENT_SCREEN_SIZE_INDEX = 0
+
+def get_current_screen_size():
+    """
+    Retourne la largeur et la hauteur de l'écran actuellement sélectionné.
+    """
+    return SCREEN_SIZES[CURRENT_SCREEN_SIZE_INDEX][1:3]
+
+def get_current_screen_size_label():
+    """
+    Retourne le label de la taille d'écran actuellement sélectionnée.
+    """
+    return SCREEN_SIZES[CURRENT_SCREEN_SIZE_INDEX][0]
+
+def next_screen_size():
+    global CURRENT_SCREEN_SIZE_INDEX
+    CURRENT_SCREEN_SIZE_INDEX = (CURRENT_SCREEN_SIZE_INDEX + 1) % len(SCREEN_SIZES)
+
+def prev_screen_size():
+    global CURRENT_SCREEN_SIZE_INDEX
+    CURRENT_SCREEN_SIZE_INDEX = (CURRENT_SCREEN_SIZE_INDEX - 1) % len(SCREEN_SIZES)

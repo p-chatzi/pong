@@ -121,21 +121,31 @@ def parametres_menu(screen, font):
     Affiche le menu des paramètres et permet de modifier la taille des paddles.
     Navigation identique au menu principal.
     """
-    options = ["Taille des paddles", "Retour"]
+    options = ["Taille des paddles", "Taille de l'écran","Retour"]
     selection = 0
     arrow_img = load_arrow(font)
 
     while True:
+        # Affichage du menu
         screen.fill(BLACK)
         titre = font.render("PARAMÈTRES", True, WHITE)
         screen.blit(titre, (get_pos_x_titre(titre), POS_Y_TITRE))
 
         for i, option in enumerate(options):
+            # Affichage de la taille des paddles
             if i == 0:
                 size_name = settings.get_current_paddle_name()
                 text = f"Taille des paddles : [{size_name}]"
-            else:
+
+            # Affichage de la taille de l'écran
+            if i == 1:
+                screen_label = settings.get_current_screen_size_label()
+                text = f"Taille de l'écran : [{screen_label}]"
+
+            elif i == 2:
                 text = option
+
+            # Rendu du text
             text_surface = font.render(text, True, WHITE)
             x_text = get_pos_x_titre(text_surface)
             y_text = MENU_OPTIONS_START_Y + i * MENU_OPTIONS_SPACING
@@ -144,22 +154,36 @@ def parametres_menu(screen, font):
                 x_arrow = x_text - arrow_img.get_width() - ALLIGN_TEXT_PADDING
                 y_arrow = y_text + get_centered_y(text_surface, arrow_img)
                 screen.blit(arrow_img, (x_arrow, y_arrow))
-
         pygame.display.flip()
 
+        # Gestion des événements
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+
+            # Gestion des événements de navigation
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
                     selection = (selection - 1) % len(options)
                 elif event.key == pygame.K_DOWN:
                     selection = (selection + 1) % len(options)
+
+                # Modification de la taille des raquettes
                 elif event.key == pygame.K_LEFT and selection == 0:
                     settings.CURRENT_PADDLE_SIZE_INDEX = (settings.CURRENT_PADDLE_SIZE_INDEX - 1) % len(PADDLE_SIZES)
                 elif event.key == pygame.K_RIGHT and selection == 0:
                     settings.CURRENT_PADDLE_SIZE_INDEX = (settings.CURRENT_PADDLE_SIZE_INDEX + 1) % len(PADDLE_SIZES)
                 elif event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
-                    if selection == 1:  # Retour
+                # Retour au menu principal
+                    if selection == 2:
+                        return
+
+                # Modification de la taille de l'écran
+                elif event.key == pygame.K_RIGHT and selection == 1:
+                    settings.CURRENT_SCREEN_SIZE_INDEX = (settings.CURRENT_SCREEN_SIZE_INDEX - 1) % len(settings.SCREEN_SIZES)
+                elif event.key == pygame.K_LEFT and selection == 1:
+                    settings.CURRENT_SCREEN_SIZE_INDEX = (settings.CURRENT_SCREEN_SIZE_INDEX + 1) % len(settings.SCREEN_SIZES)
+                # Retour au menu principal
+                    if selection == 2:
                         return
