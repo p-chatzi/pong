@@ -17,6 +17,8 @@ Modules :
 - constants : width et height de l'écran.
 - menu : Menu principal et menu des paramètres.
 - game : Classe PongGame pour la logique du jeu.
+- settings : Gestion des paramètres dynamiques du jeu.
+- os : Pour centrer la fenêtre de Pygame sur l'écran.
 
 Exécution :
 - À exécuter directement pour appeler la fonction main().
@@ -27,7 +29,7 @@ import os
 # Pour centrer la fenêtre de Pygame sur l'écran
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 import pygame
-from constants import WIDTH, HEIGHT, WHITE, END_TEXT_OFFSET_Y, FONT_SIZE
+from constants import WHITE, END_TEXT_OFFSET_Y, FONT_SIZE
 from menu import main_menu, parametres_menu
 from game import PongGame
 from settings import get_current_paddle_height, get_current_screen_size_label, get_current_screen_size
@@ -41,9 +43,10 @@ def wait_for_key(screen, font):
         screen (pygame.Surface): La surface de l'écran où le text sera affiché.
         font (pygame.font.Font): La police utilisée pour rendre le text.
     """
+    width, height = get_current_screen_size()
     text = font.render("Appuyez sur une touche pour revenir au menu", True, WHITE)
-    screen.blit(text, (WIDTH // 2 - text.get_width() // 2,
-                       HEIGHT // 2 - text.get_height() // 2 + END_TEXT_OFFSET_Y))
+    screen.blit(text, (width // 2 - text.get_width() // 2,
+                       height // 2 - text.get_height() // 2 + END_TEXT_OFFSET_Y))
     pygame.display.flip()
     waiting = True
     while waiting:
@@ -102,7 +105,7 @@ def main():
                 screen = pygame.display.set_mode((width, height))
 
             # Création de l'objet PongGame et lancement du jeu
-            jeu = PongGame(paddle_height, label, width, height)
+            jeu = PongGame(paddle_height, width, height)
             jeu.screen = screen
             jeu.font = font
             jeu.run()

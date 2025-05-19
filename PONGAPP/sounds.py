@@ -2,7 +2,6 @@
 Initialise et charge les sons du jeu depuis le dossier 'assets' en utilisant pygame.mixer.
 """
 
-
 import os
 import pygame
 

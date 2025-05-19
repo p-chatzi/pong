@@ -20,10 +20,11 @@ import sys
 import os
 import pygame
 from constants import (
-    WIDTH, WHITE, BLACK, POS_Y_TITRE, MENU_OPTIONS_SPACING,
+    WHITE, BLACK, POS_Y_TITRE, MENU_OPTIONS_SPACING,
     MENU_OPTIONS_START_Y, ALLIGN_TEXT_PADDING, PADDLE_SIZES
 )
 import settings
+
 
 def load_arrow(font):
     """
@@ -44,6 +45,7 @@ def load_arrow(font):
     image_resized = pygame.transform.smoothscale(image, (width, height_text))
     return image_resized
 
+
 def get_pos_x_titre(titre, window_width):
     """
     Calcule la position X pour centrer le text sur l'écran.
@@ -55,6 +57,7 @@ def get_pos_x_titre(titre, window_width):
         int: La position X pour centrer le titre.
     """
     return window_width // 2 - titre.get_width() // 2
+
 
 def get_centered_y(text_surface, arrow_img):
     """
@@ -69,6 +72,7 @@ def get_centered_y(text_surface, arrow_img):
         int: Décalage Y pour centrer l'image sur le text.
     """
     return (text_surface.get_height() - arrow_img.get_height()) // 2
+
 
 def main_menu(screen, font):
     """
@@ -115,6 +119,7 @@ def main_menu(screen, font):
                     selection = (selection + 1) % len(options)
                 elif event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
                     return options[selection].lower()
+
 
 def parametres_menu(screen, font):
     """

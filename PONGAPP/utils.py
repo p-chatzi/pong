@@ -8,7 +8,8 @@ Fonctions:
 
 import random
 import pygame
-from constants import WIDTH, HEIGHT, BALL_SIZE, BALL_SPEED_INIT_X, BALL_SPEED_INIT_Y
+from constants import BALL_SIZE, BALL_SPEED_INIT_X, BALL_SPEED_INIT_Y
+
 
 def reset_ball(width, height):
     """
@@ -27,6 +28,7 @@ def reset_ball(width, height):
     last_speedup = pygame.time.get_ticks()
 
     return ball, ball_speed_x, ball_speed_y, last_speedup
+
 
 def format_time(milliseconds):
     """

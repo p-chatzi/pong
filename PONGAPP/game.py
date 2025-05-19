@@ -2,14 +2,13 @@
 Classe PongGame pour gérer le jeu Pong avec bonus, scores et effets visuels/sonores.
 """
 
-
 import sys
 import pygame
 from constants import (
-    WIDTH, HEIGHT, WHITE, BLACK, FPS, PADDLE_WIDTH, PADDLE_SPEED,
+    WHITE, BLACK, FPS, PADDLE_WIDTH, PADDLE_SPEED, SIZE_BOOST,
     FONT_SIZE, TIME_Y_OFFSET, WIN_SCORE, SPEEDUP_INTERVAL,
     SPEEDUP_FACTOR, BONUS_SPAWN_INTERVAL, SPEED_BOOST, SPEED_SLOW,
-    PADDEL_MARGIN_X, PADDLE_HEIGHT
+    PADDEL_MARGIN_X, PADDLE_HEIGHT, WINNER_DISPLAY_MS, RESET_DELAY_MS
 )
 import settings
 from sounds import init_sounds
@@ -51,7 +50,7 @@ class PongGame:
     - draw() : Dessine les éléments du jeu à l'écran.
     - show_winner() : Affiche le gagnant à la fin de la partie.
     """
-    def __init__(self, paddle_height, label, width, height):
+    def __init__(self, paddle_height, width, height):
         self.width = width
         self.height = height
         pygame.init()
@@ -174,16 +173,16 @@ class PongGame:
             self.paddle_b_speed = PADDLE_SPEED
             
         # Effet taille
-        # if self.active_effects["increase_size_a"]:
-        #     self.paddle_a.height = self.original_paddle_height * SIZE_BOOST
-        # else:
-        #     self.paddle_a.height = self.original_paddle_height
-            
-        # if self.active_effects["increase_size_b"]:
-        #     self.paddle_b.height = self.original_paddle_height * SIZE_BOOST
-        # else:
-        #     self.paddle_b.height = self.original_paddle_height
-            
+        if self.active_effects["increase_size_a"]:
+            self.paddle_a.height = settings.get_current_paddle_height() * SIZE_BOOST
+        else:
+            self.paddle_a.height = settings.get_current_paddle_height()
+
+        if self.active_effects["increase_size_b"]:
+            self.paddle_b.height = settings.get_current_paddle_height() * SIZE_BOOST
+        else:
+            self.paddle_b.height = settings.get_current_paddle_height()
+
         # Effet ralentissement
         if self.active_effects["slow_opponent_a"]:
             self.paddle_b_speed = PADDLE_SPEED * SPEED_SLOW
@@ -258,12 +257,13 @@ class PongGame:
         sa speed, les effets actifs et la taille des paddles.
         """
         self.ball, self.ball_speed_x, self.ball_speed_y, self.last_speedup = reset_ball(self.width, self.height)
-        pygame.time.delay(700)
+        pygame.time.delay(RESET_DELAY_MS)
         # Réinitialiser les effets de bonus
         for effect in self.active_effects:
             self.active_effects[effect] = False
         self.paddle_a.height = settings.get_current_paddle_height()
         self.paddle_b.height = settings.get_current_paddle_height()
+
 
     def draw(self):
         """
@@ -311,4 +311,4 @@ class PongGame:
         text = self.font.render(msg, True, WHITE)
         self.screen.blit(text, (self.width//2 - text.get_width()//2, self.height//2 - text.get_height()//2))
         pygame.display.flip()
-        pygame.time.wait(3000)
+        pygame.time.wait(WINNER_DISPLAY_MS)

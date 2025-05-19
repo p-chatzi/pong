@@ -2,7 +2,6 @@
 Constantes pour le jeu Pong : dimensions, couleurs, speeds, scores, bonus et paramètres divers.
 """
 
-
 # Dimensions de l'écran
 WIDTH, HEIGHT = 1000, 600
 
@@ -20,10 +19,10 @@ PADDLE_B_X_OFFSET = 40
 SCORE_Y = 20
 TIME_Y_OFFSET = 0.05 # Pourcentage de la hauteur de l'écran
 RESET_DELAY_MS = 700
-WINNER_DISPLAY_MS = 3000
+WINNER_DISPLAY_MS = 2000
 SPEEDUP_INTERVAL = 10000  # 10 secondes
 SPEEDUP_FACTOR = 1.5  # facteur acceleration
-WIN_SCORE = 7
+WIN_SCORE = 1
 BALL_SIZE = 15
 BALL_SPEED_INIT_X = 5
 BALL_SPEED_INIT_Y = 5
@@ -62,7 +61,7 @@ PADDLE_SIZES = [
     ("Moyen", 100),
     ("Grand", 200)
 ]
-CURRENT_PADDLE_SIZE_INDEX = 1  # Moyen par défaut
+CURRENT_PADDLE_SIZE_INDEX = 1  # Taille moyen par défaut
 PADDLE_HEIGHT = PADDLE_SIZES[CURRENT_PADDLE_SIZE_INDEX][1]
 
 FPS = 60
