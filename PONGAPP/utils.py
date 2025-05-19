@@ -9,17 +9,20 @@ Fonctions:
 import random
 import pygame
 from constants import BALL_SIZE, BALL_SPEED_INIT_X, BALL_SPEED_INIT_Y
+import settings
 
 
 def reset_ball(width, height):
     """
     Réinitialise la ball au centre avec une speed aléatoire et retourne ses paramètres initiaux.
     """
+    ball_size = settings.get_current_ball_size()
+
     # Position initiale de la ball au centre de l'écran
-    ball = pygame.Rect(width // 2 - BALL_SIZE // 2,
-                    height // 2 - BALL_SIZE // 2,
-                    BALL_SIZE,
-                    BALL_SIZE)
+    ball = pygame.Rect(width//2 - ball_size//2,
+                    height//2 - ball_size//2,
+                    ball_size,
+                    ball_size)
 
     # Vitesse initiale aléatoire
     ball_speed_x = random.choice([-1, 1]) * BALL_SPEED_INIT_X

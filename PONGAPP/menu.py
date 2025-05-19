@@ -87,17 +87,36 @@ def main_menu(screen, font):
     """
     options = ["Jouer", "Paramètres", "Quitter"]
     selection = 0
+    top_visible = 0  # Index de la première option visible
     arrow_img = load_arrow(font)
 
     while True:
         screen.fill(BLACK)
         titre = font.render("PONG", True, WHITE)
-        screen.blit(titre, (get_pos_x_titre(titre, screen.get_width()), POS_Y_TITRE))
 
-        for i, option in enumerate(options):
+        # Calcul de l'espace disponible et du nombre d'options visibles
+        screen_height = screen.get_height()
+        title_padding = titre.get_height() + 20
+        available_height = screen_height - title_padding - 40
+        max_visible = max(1, available_height // MENU_OPTIONS_SPACING)  # Au moins 1 option visible
+
+        # Ajuster top_visible pour que la sélection soit toujours visible
+        if selection < top_visible:
+            top_visible = selection
+        elif selection >= top_visible + max_visible:
+            top_visible = selection - max_visible + 1
+        # Afficher le titre en haut et centré
+        title_y = int(screen.get_height() * 0.1)
+        screen.blit(titre, (get_pos_x_titre(titre, screen.get_width()), title_y))
+
+        # Afficher seulement les options visibles
+        for i in range(top_visible, min(top_visible + max_visible, len(options))):
+            option = options[i]
             text_surface = font.render(option, True, WHITE)
             x_text = get_pos_x_titre(text_surface, screen.get_width())
-            y_text = MENU_OPTIONS_START_Y + i * MENU_OPTIONS_SPACING
+            # Espace de l'option = (index visible - 0) * espacement + décalage du titre
+            title_gap = title_y + titre.get_height() + 30
+            y_text = (i - top_visible) * MENU_OPTIONS_SPACING + title_gap
 
             if i == selection:
                 x_arrow = x_text - arrow_img.get_width() - ALLIGN_TEXT_PADDING
@@ -105,6 +124,17 @@ def main_menu(screen, font):
                 screen.blit(arrow_img, (x_arrow, y_arrow))
 
             screen.blit(text_surface, (x_text, y_text))
+
+        # Indicateurs de défilement si nécessaire
+        if top_visible > 0:
+            # Afficher indicateur "plus d'options au-dessus"
+            up_text = font.render("▲", True, WHITE)
+            screen.blit(up_text, (screen.get_width() // 2, title_padding // 4))
+
+        if top_visible + max_visible < len(options):
+            # Afficher indicateur "plus d'options en-dessous"
+            down_text = font.render("▼", True, WHITE)
+            screen.blit(down_text, (screen.get_width() // 2, screen_height - 20))
 
         pygame.display.flip()
 
@@ -126,69 +156,101 @@ def parametres_menu(screen, font):
     Affiche le menu des paramètres et permet de modifier la taille des paddles.
     Navigation identique au menu principal.
     """
-    options = ["Taille des paddles", "Taille de l'écran","Retour"]
+    options = ["Taille des paddles", "Taille de la balle", "Taille de l'écran", "Retour"]
     selection = 0
+    top_visible = 0  # Index de la première option visible
     arrow_img = load_arrow(font)
 
     while True:
         # Affichage du menu
         screen.fill(BLACK)
         titre = font.render("PARAMÈTRES", True, WHITE)
-        screen.blit(titre, (get_pos_x_titre(titre, screen.get_width()), POS_Y_TITRE))
-
-        for i, option in enumerate(options):
-            # Affichage de la taille des paddles
+        titre_height = titre.get_height()
+        
+        # Calcul de l'espace disponible et du nombre d'options visibles
+        screen_height = screen.get_height()
+        title_y = int(screen_height * 0.1)  # 10% of screen height for title position
+        available_height = screen_height - (title_y + titre_height + 30) - 40  # Available height for options
+        max_visible = max(1, available_height // MENU_OPTIONS_SPACING)  # At least 1 option visible
+        
+        # Ajuster top_visible pour que la sélection soit toujours visible
+        if selection < top_visible:
+            top_visible = selection
+        elif selection >= top_visible + max_visible:
+            top_visible = selection - max_visible + 1
+            
+        # Afficher le titre en haut et centré
+        screen.blit(titre, (get_pos_x_titre(titre, screen.get_width()), title_y))
+        title_gap = title_y + titre_height + 30  # 30 pixels extra space
+        
+        # Préparer et afficher les options visibles avec leurs valeurs actuelles
+        for i in range(top_visible, min(top_visible + max_visible, len(options))):
+            # Déterminer le texte à afficher selon l'option
             if i == 0:
                 size_name = settings.get_current_paddle_name()
                 text = f"Taille des paddles : [{size_name}]"
-
-            # Affichage de la taille de l'écran
-            if i == 1:
+            elif i == 1:
+                ball_name = settings.get_current_ball_name()
+                text = f"Taille de la balle : [{ball_name}]"
+            elif i == 2:
                 screen_label = settings.get_current_screen_size_label()
                 text = f"Taille de l'écran : [{screen_label}]"
-
-            elif i == 2:
-                text = option
-
-            # Rendu du text
+            else:
+                text = options[i]
+                
+            # Rendu et affichage du texte (USING SCROLLABLE POSITIONING)
             text_surface = font.render(text, True, WHITE)
             x_text = get_pos_x_titre(text_surface, screen.get_width())
-            y_text = MENU_OPTIONS_START_Y + i * MENU_OPTIONS_SPACING
+            y_text = (i - top_visible) * MENU_OPTIONS_SPACING + title_gap
             screen.blit(text_surface, (x_text, y_text))
+            
+            # Afficher la flèche de sélection
             if i == selection:
                 x_arrow = x_text - arrow_img.get_width() - ALLIGN_TEXT_PADDING
                 y_arrow = y_text + get_centered_y(text_surface, arrow_img)
                 screen.blit(arrow_img, (x_arrow, y_arrow))
+                
+        # Indicateurs de défilement si nécessaire
+        if top_visible > 0:
+            up_text = font.render("▲", True, WHITE)
+            screen.blit(up_text, (screen.get_width() // 2, title_y // 2))
+            
+        if top_visible + max_visible < len(options):
+            down_text = font.render("▼", True, WHITE)
+            screen.blit(down_text, (screen.get_width() // 2, screen_height - 20))
+            
         pygame.display.flip()
-
+        
         # Gestion des événements
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-
-            # Gestion des événements de navigation
+                
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
                     selection = (selection - 1) % len(options)
                 elif event.key == pygame.K_DOWN:
                     selection = (selection + 1) % len(options)
-
+                    
                 # Modification de la taille des raquettes
                 elif event.key == pygame.K_LEFT and selection == 0:
                     settings.CURRENT_PADDLE_SIZE_INDEX = (settings.CURRENT_PADDLE_SIZE_INDEX - 1) % len(PADDLE_SIZES)
                 elif event.key == pygame.K_RIGHT and selection == 0:
                     settings.CURRENT_PADDLE_SIZE_INDEX = (settings.CURRENT_PADDLE_SIZE_INDEX + 1) % len(PADDLE_SIZES)
-                elif event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
-                # Retour au menu principal
-                    if selection == 2:
-                        return
-
-                # Modification de la taille de l'écran
-                elif event.key == pygame.K_RIGHT and selection == 1:
-                    settings.CURRENT_SCREEN_SIZE_INDEX = (settings.CURRENT_SCREEN_SIZE_INDEX - 1) % len(settings.SCREEN_SIZES)
+                    
+                # Modification de la taille de la balle
                 elif event.key == pygame.K_LEFT and selection == 1:
-                    settings.CURRENT_SCREEN_SIZE_INDEX = (settings.CURRENT_SCREEN_SIZE_INDEX + 1) % len(settings.SCREEN_SIZES)
+                    settings.CURRENT_BALL_SIZE_INDEX = (settings.CURRENT_BALL_SIZE_INDEX - 1) % len(settings.BALL_SIZES)
+                elif event.key == pygame.K_RIGHT and selection == 1:
+                    settings.CURRENT_BALL_SIZE_INDEX = (settings.CURRENT_BALL_SIZE_INDEX + 1) % len(settings.BALL_SIZES)
+                    
+                # Modification de la taille de l'écran
+                elif event.key == pygame.K_LEFT and selection == 2:
+                    settings.taille_ecran_precedente()
+                elif event.key == pygame.K_RIGHT and selection == 2:
+                    settings.taille_ecran_suivante()
+                    
                 # Retour au menu principal
-                    if selection == 2:
-                        return
+                elif (event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER) and selection == 3:
+                    return
