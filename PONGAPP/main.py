@@ -43,7 +43,8 @@ def wait_for_key(screen, font):
         screen (pygame.Surface): La surface de l'écran où le text sera affiché.
         font (pygame.font.Font): La police utilisée pour rendre le text.
     """
-    width, height = get_current_screen_size()
+    width = screen.get_width()
+    height = screen.get_height()
     text = font.render("Appuyez sur une touche pour revenir au menu", True, WHITE)
     screen.blit(text, (width // 2 - text.get_width() // 2,
                        height // 2 - text.get_height() // 2 + END_TEXT_OFFSET_Y))
@@ -75,9 +76,10 @@ def main():
     """
     # Initialisation de Pygame
     pygame.init()
-    # Configuration de la taille d'écran
+    # Initialisation de la taille d'écran
+    label = get_current_screen_size_label()
     width, height = get_current_screen_size()
-    if width == 0 and height == 0:
+    if label == "Fullscreen":
         screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         info = pygame.display.Info()
         width, height = info.current_w, info.current_h
@@ -108,12 +110,20 @@ def main():
             jeu = PongGame(paddle_height, width, height)
             jeu.screen = screen
             jeu.font = font
-            jeu.run()
+            jeu.run(screen)
             wait_for_key(screen, font)
 
         # On entre dans le menu des paramètres
         elif choix == "paramètres":
             parametres_menu(screen, font)
+            width, height = get_current_screen_size()
+            label = get_current_screen_size_label()
+            if label == "Fullscreen":
+                screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+                info = pygame.display.Info()
+                width, height = info.current_w, info.current_h
+            else:
+                screen = pygame.display.set_mode((width, height))
 
         # On quitte le jeu
         elif choix == "quitter":

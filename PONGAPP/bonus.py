@@ -5,7 +5,6 @@ peuvent être collectés par les joueurs, et appliquent des effets temporaires.
 Classes:
     - Bonus: Représente un bonus avec des propriétés, effets, et gestion de durée.
 Constantes importées:
-    - WIDTH, HEIGHT: Dimensions de l'écran.
     - WHITE, BLACK: Couleurs.
     - PADDLE_HEIGHT: height des paddles.
     - BONUS_RADIUS: Rayon du bonus.
@@ -18,7 +17,7 @@ Fonctions utilitaires:
 import random
 import pygame
 from constants import (
-    WIDTH, HEIGHT, WHITE, BLACK, GREEN, YELLOW, RED,
+    WHITE, BLACK, GREEN, YELLOW, RED,
     PADDLE_HEIGHT, BONUS_RADIUS, BONUS_DURATION, BONUS_BLINK_INTERVAL,
     BONUS_LEFT_ZONE, BONUS_RIGHT_ZONE, BONUS_MARGIN_X,
     BONUS_INFO_Y_PLAYER1, BONUS_INFO_Y_PLAYER2,
@@ -44,7 +43,7 @@ class Bonus:
         visible (bool) : Indique si le bonus est visible.
 
     Méthodes :
-        spawn() : Fait apparaître un bonus aléatoire sur le terrain.
+        spawn(screen) : Fait apparaître un bonus aléatoire sur le terrain.
         update() : Met à jour l'état du bonus (expiration).
         draw(screen) : Dessine le bonus et affiche ses infos.
         check_collision(rect, player) : Vérifie la collision avec un joueur.
@@ -68,7 +67,7 @@ class Bonus:
         self.visible = True
 
 
-    def spawn(self):
+    def spawn(self, screen):
         """
         Fait apparaître un bonus sur l'écran. Définit son type, couleur, position aléatoire
         et initialise les attributs liés à son état (actif, temps d'apparition, visibilité).
@@ -81,9 +80,9 @@ class Bonus:
             if spawn_side == "left":
                 self.rect.x = random.randint(BONUS_MARGIN_X, BONUS_LEFT_ZONE)
             else:
-                self.rect.x = random.randint(BONUS_RIGHT_ZONE, WIDTH - BONUS_MARGIN_X)
+                self.rect.x = random.randint(BONUS_RIGHT_ZONE, screen.get_width() - BONUS_MARGIN_X)
 
-            self.rect.y = random.randint(PADDLE_HEIGHT, HEIGHT - PADDLE_HEIGHT)
+            self.rect.y = random.randint(PADDLE_HEIGHT, screen.get_height() - PADDLE_HEIGHT)
             self.active = True
             self.spawn_time = pygame.time.get_ticks()
             self.blink_timer = 0
@@ -138,7 +137,7 @@ class Bonus:
                     if self.type['effect'].endswith('a')
                     else BONUS_INFO_Y_PLAYER2
                     )
-                screen.blit(text_surface, (WIDTH//2 - text_surface.get_width()//2, y_pos))
+                screen.blit(text_surface, (screen.get_width()//2 - text_surface.get_width()//2, y_pos))
 
 
     def check_collision(self, rect, player):

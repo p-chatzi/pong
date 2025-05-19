@@ -41,7 +41,7 @@ class PongGame:
     - original_paddle_height : height originale des paddles.
 
     Méthodes :
-    - run() : Boucle principale du jeu.
+    - run(screen) : Boucle principale du jeu.
     - update(now) : Met à jour l'état du jeu.
     - apply_bonus_effects() : Applique les effets des bonus.
     - move_paddles() : Gère le déplacement des paddles.
@@ -93,7 +93,7 @@ class PongGame:
         self.original_paddle_height = PADDLE_HEIGHT
 
 
-    def run(self):
+    def run(self, screen):
         """
         Exécute la boucle principale du jeu, gère les événements, met à jour l'état du jeu 
         et affiche les éléments graphiques. Permet de mettre le jeu en pause avec la barre d'espace.
@@ -110,14 +110,14 @@ class PongGame:
                         self.paused = not self.paused
 
             if not self.paused:
-                self.update(now)
+                self.update(now, screen)
                 self.bonus.update()  # Mettre à jour l'état du bonus
 
             self.draw()
         self.show_winner()
 
 
-    def update(self, now):
+    def update(self, now, screen):
         """
         Met à jour l'état du jeu.
         Args:
@@ -130,7 +130,7 @@ class PongGame:
         """
         # Gestion du bonus
         if now - self.last_bonus_spawn > self.bonus_spawn_interval and not self.bonus.active:
-            self.bonus.spawn()
+            self.bonus.spawn(screen)
             self.last_bonus_spawn = now
 
         effect = (self.bonus.check_collision(self.paddle_a, "a")

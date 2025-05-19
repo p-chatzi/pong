@@ -2,8 +2,8 @@
 Constantes pour le jeu Pong : dimensions, couleurs, speeds, scores, bonus et paramètres divers.
 """
 
-# Dimensions de l'écran
-WIDTH, HEIGHT = 1000, 600
+# Dimensions initial de l'écran
+WIDTH, HEIGHT = 800, 400
 
 # Couleurs
 WHITE = (255, 255, 255)
@@ -57,7 +57,7 @@ Y_TEXT = 200
 
 # Tailles des paddles (nom affiché, hauteur)
 PADDLE_SIZES = [
-    ("Petit", 30),
+    ("Petit", 40),
     ("Moyen", 100),
     ("Grand", 200)
 ]
