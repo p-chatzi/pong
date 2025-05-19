@@ -16,9 +16,9 @@ Fonctionnalité ajoutée:
 ================================== Version 0.5.1 ==================================
 
 Changements:
-> Changement noms de variable (franglais -> full anglais)
-> Nombres magique remplace par des constantes
-> Simplification de certaines logiques
++ Changement noms de variable (franglais -> full anglais)
++ Nombres magique remplace par des constantes
++ Simplification de certaines logiques
 
 ================================== Version 0.5 ==================================
 
@@ -31,7 +31,7 @@ Bug fix:
 ================================== Version 0.4.1 ==================================
 
 Changement:
-> Amélioration de la pause
++ Amélioration de la pause
 
 ================================== Version 0.4 ==================================
 
@@ -50,8 +50,8 @@ Fonctionnalités ajoutées:
 + Possibilité de mettre en pause avec barre espace
 
 Changement:
-> Amélioration système de score
-> Modifications sons à chaque collision avec les paddles, les bords et lors des points
++ Amélioration système de score
++ Modifications sons à chaque collision avec les paddles, les bords et lors des points
 
 ================================== Version 0.2 ==================================
 
